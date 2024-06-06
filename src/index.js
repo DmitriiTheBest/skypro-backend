@@ -1,5 +1,6 @@
 const http = require("http");
 const getUsers = require("./modules/users");
+const { URL } = require("url");
 
 const server = http.createServer((request, response) => {
   const ipAddress = "http://127.0.0.1";
@@ -15,17 +16,17 @@ const server = http.createServer((request, response) => {
   }
 
   if (request.url === "/users") {
-    response.statusCode = 200;
-    response.message = "OK";
+    response.status = 200;
+    response.statusMessage = "OK";
     response.header = "Content-Type: application/json";
     response.write(getUsers());
     response.end();
     return;
   }
 
-  if (request.url === "/?hello") {
-    response.statusCode = 400;
-    response.message = "Bad Request";
+  if (request.url === "/?hello=") {
+    response.status = 400;
+    response.statusMessage = "Bad Request";
     response.header = "Content-Type: text/plain";
     response.write(`Enter your name, please`);
     response.end();
@@ -33,8 +34,8 @@ const server = http.createServer((request, response) => {
   }
 
   if (request.url === "/") {
-    response.statusCode = 200;
-    response.message = "OK";
+    response.status = 200;
+    response.statusMessage = "OK";
     response.header = "Content-Type: text/plain";
     response.write("Hello World!!!");
     response.end();
@@ -42,12 +43,12 @@ const server = http.createServer((request, response) => {
   }
 
   response.statusCode = 500;
-  response.message = "OK";
+  response.statusMessage = "Internal Server Error";
   response.header = "Content-Type: text/plain";
   response.write("{}");
   response.end();
 });
 
 server.listen(3003, "127.0.0.1", () => {
-  console.log("Server is running at http://127.0.0.1:3003/");
+  console.log("Server is running at http://127.0.0.1:3003");
 });

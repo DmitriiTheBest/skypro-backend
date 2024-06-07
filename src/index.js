@@ -3,33 +3,26 @@ const getUsers = require("./modules/users");
 const { URL } = require("url");
 
 const server = http.createServer((request, response) => {
-  const ipAddress = "http://127.0.0.1";
-  const url = new URL(request.url, ipAddress);
+  const url = new URL(request.url, "http://127.0.0.1");
   const helloValue = url.searchParams.get("hello");
 
   if (helloValue) {
     response.status = 200;
     response.statusMessage = "Ok";
     response.header = "Content-Type: text/plain";
-    response.write(`hello, ${helloValue}`);
+    response.write(`Hello, ${helloValue}`);
     response.end();
+
+    return;
   }
 
-  if (request.url === "/users") {
+  if (request.url === "/?users") {
     response.status = 200;
     response.statusMessage = "OK";
     response.header = "Content-Type: application/json";
     response.write(getUsers());
     response.end();
-    return;
-  }
 
-  if (request.url === "/?hello=") {
-    response.status = 400;
-    response.statusMessage = "Bad Request";
-    response.header = "Content-Type: text/plain";
-    response.write(`Enter your name, please`);
-    response.end();
     return;
   }
 
@@ -39,6 +32,17 @@ const server = http.createServer((request, response) => {
     response.header = "Content-Type: text/plain";
     response.write("Hello World!!!");
     response.end();
+
+    return;
+  }
+
+  if (!helloValue) {
+    response.status = 400;
+    response.statusMessage = "Bad Request";
+    response.header = "Content-Type: text/plain";
+    response.write(`Enter your name, please`);
+    response.end();
+
     return;
   }
 
@@ -47,8 +51,10 @@ const server = http.createServer((request, response) => {
   response.header = "Content-Type: text/plain";
   response.write("{}");
   response.end();
+
+  return;
 });
 
-server.listen(3003, "127.0.0.1", () => {
+server.listen(3003, () => {
   console.log("Server is running at http://127.0.0.1:3003");
 });
